@@ -1,6 +1,7 @@
 'use strict';
 const fs = require('fs');
 const path = require('path');
+const crypto = require('crypto');
 const { pathToFileURL } = require('url');
 const { readJson, writeJsonAtomic, preserveCorrupt } = require('./jsonfile');
 const names = require('../shared/names');
@@ -24,6 +25,7 @@ function now() {
 
 function newPageData() {
   return {
+    uid: crypto.randomUUID(),     // stable across renumbering, unlike the page id
     capturedAt: now(),
     label: '',
     pdfPage: null,
@@ -235,7 +237,8 @@ class Library {
     const f = this.pageFiles(bookId, pageId);
     const read = readJson(f.json);
     let data;
-    if (read.ok) data = { ...newPageData(), ...read.data };
+    // A uid only means something once it is on disk; never invent one on read.
+    if (read.ok) data = { ...newPageData(), uid: null, ...read.data };
     else if (read.missing) throw new Error(`No such page: ${pageId}`);
     else data = { ...newPageData(), corrupt: true, ocr: { status: 'failed', width: 0, height: 0, lines: [], error: 'Page file is unreadable' } };
     return {
@@ -272,6 +275,19 @@ class Library {
     const result = mutator(data) || data;
     writeJsonAtomic(f.json, result);
     return result;
+  }
+
+  /** Current page id of the page whose data carries `uid`, or null. */
+  findPageByUid(bookId, uid) {
+    if (!uid) return null;
+    for (const ch of this.listChapters(bookId)) {
+      for (const index of this.listPageIndexes(bookId, ch.id)) {
+        const pageId = `${ch.id}/${names.pageBase(index)}`;
+        const read = readJson(this.pageFiles(bookId, pageId).json);
+        if (read.ok && read.data.uid === uid) return pageId;
+      }
+    }
+    return null;
   }
 
   movePage(bookId, pageId, toChapterId) {

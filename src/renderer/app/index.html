@@ -1,0 +1,31 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta http-equiv="Content-Security-Policy"
+        content="default-src 'none'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data: file:;" />
+  <title>Dogear</title>
+  <link rel="stylesheet" href="../theme.css" />
+  <link rel="stylesheet" href="app.css" />
+  <link rel="stylesheet" href="views/library.css" />
+  <link rel="stylesheet" href="views/book.css" />
+  <link rel="stylesheet" href="views/summary.css" />
+</head>
+<body>
+  <header id="titlebar">
+    <div class="tb__brand" id="brand"></div>
+    <div class="tb__drag"></div>
+    <div class="tb__actions" id="tbActions"></div>
+  </header>
+  <main id="view"></main>
+  <div id="toasts"></div>
+
+  <script src="../../shared/words.js"></script>
+  <script src="dom.js"></script>
+  <script src="ui.js"></script>
+  <script src="views/library.js"></script>
+  <script src="views/book.js"></script>
+  <script src="views/summary.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>

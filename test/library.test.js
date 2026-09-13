@@ -108,8 +108,12 @@ test('pages: add to last chapter by default, update, move, delete with renumberi
   assert.strictEqual(data.label, 'Page 5');
   assert.strictEqual(readJson(path.join(root, 'B', '01 Chapter 1', '002.json')).data.notes[0].text, 'hi');
 
+  const uid = p2.data.uid;
+  assert.ok(uid);
   const moved = lib.movePage(id, p2.id, '02 Two');
   assert.strictEqual(moved, '02 Two/002');
+  assert.strictEqual(lib.findPageByUid(id, uid), '02 Two/002');
+  assert.strictEqual(lib.findPageByUid(id, 'nope'), null);
   assert.deepStrictEqual(ls(path.join(root, 'B', '01 Chapter 1')), ['001.json', '001.png', '002.json', '002.png']);
   assert.strictEqual(lib.getPage(id, '02 Two/002').data.label, 'Page 5');
   assert.strictEqual(lib.movePage(id, '02 Two/002', '02 Two'), '02 Two/002');
