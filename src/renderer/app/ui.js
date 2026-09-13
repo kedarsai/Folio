@@ -20,11 +20,23 @@
   }
 
   // --------------------------------------------------------------- dialogs
+  const openModals = new Set();
+
+  /** Dismiss every open dialog (as if cancelled), e.g. when the screen changes. */
+  function closeAll() {
+    for (const close of [...openModals]) close(null);
+    if (openMenu) openMenu();
+  }
+
   /** Generic modal. `build(close)` returns the body nodes. Resolves with close(value). */
   function modal({ title, build, width = 400 }) {
     return new Promise((resolve) => {
       const prevFocus = document.activeElement;
+      let closed = false;
       const close = (value) => {
+        if (closed) return;
+        closed = true;
+        openModals.delete(close);
         document.removeEventListener('keydown', onKey, true);
         backdrop.classList.add('is-leaving');
         setTimeout(() => backdrop.remove(), 160);
@@ -39,6 +51,7 @@
         build(close));
       const backdrop = h('div.backdrop', { onmousedown: (e) => { if (e.target === backdrop) close(null); } }, card);
       document.body.append(backdrop);
+      openModals.add(close);
       document.addEventListener('keydown', onKey, true);
       const first = card.querySelector('input, textarea, select, .btn--primary');
       if (first) setTimeout(() => { first.focus(); if (first.select) first.select(); }, 30);
@@ -135,5 +148,5 @@
     } catch (_) { /* sound is a nicety */ }
   }
 
-  window.UI = { toast, modal, prompt, confirm, menu, snapSound };
+  window.UI = { toast, modal, prompt, confirm, menu, closeAll, snapSound };
 })();

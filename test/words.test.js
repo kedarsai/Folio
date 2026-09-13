@@ -70,3 +70,23 @@ test('detectLabel reads page and location footers', () => {
   assert.strictEqual(w.detectLabel(OCR), null);
   assert.strictEqual(w.detectLabel(null), null);
 });
+
+test('detectLabel finds a footer even with stray lines below it, but not mid-page numbers', () => {
+  const at = (y, ...texts) => ({ words: texts.map((t, i) => ({ t, x: i * 50, y, w: 40, h: 10 })) });
+  const body = (y) => at(y, 'some', 'body', 'text', 'here', 'and', 'more');
+  // Footer followed by junk from another window
+  assert.deepStrictEqual(
+    w.detectLabel({ height: 1000, lines: [body(50), body(400), at(900, 'Page', '8'), at(960, 'INBOX'), at(980, 'x')] }),
+    { label: 'Page 8', number: 8 });
+  // A bare number in the middle of the page is not a page number
+  assert.strictEqual(w.detectLabel({ height: 1000, lines: [at(20, 'Chapter'), at(500, '23'), body(600)] }), null);
+  // A bare number near the bottom edge is
+  assert.deepStrictEqual(w.detectLabel({ height: 1000, lines: [body(100), at(950, '23'), at(990, 'junk', 'line')] }), { label: '23', number: 23 });
+  // The last line of text is a footer even with blank margin below it
+  assert.deepStrictEqual(w.detectLabel({ height: 1000, lines: [body(100), body(130), at(220, 'Page', '16')] }), { label: 'Page 16', number: 16 });
+  // ...and so is a bare number set apart from the text above it
+  assert.deepStrictEqual(w.detectLabel({ height: 1000, lines: [body(100), body(130), at(200, '9')] }), { label: '9', number: 9 });
+  assert.strictEqual(w.detectLabel({ height: 1000, lines: [body(300), body(330), at(350, '9')] }), null);
+  // Long sentences mentioning a page are not footers
+  assert.strictEqual(w.detectLabel({ height: 1000, lines: [body(10), at(950, 'as', 'we', 'saw', 'on', 'page', '12', 'the', 'idea', 'holds')] }), null);
+});

@@ -73,6 +73,8 @@
 }
 .btn:hover { transform: translate(-1px, -1px); box-shadow: 4px 4px 0 var(--ink); }
 .btn:active { transform: translate(3px, 3px); box-shadow: 0 0 0 var(--ink); }
+.btn:focus-visible { outline: 3px dashed var(--orange-deep); outline-offset: 3px; }
+.btn:focus:not(:focus-visible) { outline: none; }
 .btn:disabled { opacity: .45; cursor: not-allowed; transform: none; box-shadow: var(--shadow-sm); }
 .btn--primary { background: var(--orange); color: #fff; }
 .btn--teal { background: var(--teal); color: #fff; }

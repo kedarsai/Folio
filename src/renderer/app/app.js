@@ -16,6 +16,7 @@
     unmount: null,
 
     async go(name, params = {}) {
+      window.UI.closeAll();
       if (app.unmount) { try { app.unmount(); } catch (e) { console.error(e); } }
       app.unmount = null;
       app.current = { name, params };

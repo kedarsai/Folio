@@ -16,10 +16,12 @@
   function autoGrow(ta) {
     const fit = () => {
       ta.style.height = 'auto';
+      if (!ta.offsetParent) return;          // hidden: measure once it is visible
       const borders = ta.offsetHeight - ta.clientHeight;
       ta.style.height = `${ta.scrollHeight + borders}px`;
     };
     ta.addEventListener('input', fit);
+    ta.addEventListener('focus', fit);
     requestAnimationFrame(fit);
     return ta;
   }

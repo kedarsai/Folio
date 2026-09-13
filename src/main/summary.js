@@ -109,7 +109,7 @@ function buildHtml(model, { imageSrc }) {
 <html><head><meta charset="utf-8" /><title>${esc(model.title)}</title>
 <style>
   @page { margin: 16mm 14mm; }
-  body { font-family: "Segoe UI", system-ui, sans-serif; color: #3a261c; background: #fffaf2; margin: 0; }
+  body { font-family: "Segoe UI", system-ui, sans-serif; color: #3a261c; background: #fff; margin: 0; }
   header { border-bottom: 3px solid #3a261c; padding-bottom: 10px; margin-bottom: 18px; }
   h1 { font-family: "Bahnschrift", "Segoe UI Semibold", sans-serif; font-size: 28px; margin: 0 0 4px; }
   .meta { font-family: "Bahnschrift", sans-serif; text-transform: uppercase; letter-spacing: .12em; font-size: 10px; color: #6b5244; }
@@ -119,7 +119,7 @@ function buildHtml(model, { imageSrc }) {
   .item img { width: 120px; align-self: flex-start; border: 1.5px solid #a08d7d; border-radius: 6px; }
   .text { flex: 1; min-width: 0; }
   .label { font-family: "Bahnschrift", sans-serif; text-transform: uppercase; letter-spacing: .12em; font-size: 10px; color: #d66a16; margin-bottom: 4px; }
-  blockquote { margin: 4px 0; padding: 4px 10px; border-left: 4px solid #e9c46a; background: #fdf1cf; font-size: 13px; line-height: 1.5; }
+  blockquote { margin: 4px 0; padding: 4px 10px; border-left: 4px solid #e9c46a; background: #fdf1cf; font-family: Georgia, Cambria, serif; font-size: 13.5px; line-height: 1.5; }
   .thought { margin: 2px 0 8px 12px; font-size: 12.5px; color: #6b5244; white-space: pre-wrap; }
   ul { margin: 6px 0 0; padding-left: 18px; font-size: 12.5px; }
   li { white-space: pre-wrap; margin: 2px 0; }

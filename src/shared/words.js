@@ -97,20 +97,52 @@
     return ((line && line.words) || []).map((word) => word.t).join(' ').trim();
   }
 
+  const EDGE_ZONE = 0.15;   // headers/footers live in the top or bottom 15%
+  const MAX_FOOTER_WORDS = 7;
+
   /** Page number or Kindle location from a header/footer line, if any.
-      `number` is set only for real page numbers (usable to open a PDF). */
+      `number` is set only for real page numbers (usable to open a PDF).
+      Only short lines near the top or bottom edge count, bottom first. */
   function detectLabel(ocr) {
     if (!ocr || !Array.isArray(ocr.lines) || !ocr.lines.length) return null;
-    const lines = ocr.lines;
-    const candidates = [lines[lines.length - 1], lines[lines.length - 2], lines[0]].filter(Boolean);
+    const lines = ocr.lines
+      .map((line) => {
+        const ws = (line && line.words) || [];
+        if (!ws.length) return null;
+        return {
+          text: lineText(line),
+          count: ws.length,
+          top: Math.min(...ws.map((x) => x.y)),
+          bottom: Math.max(...ws.map((x) => x.y + x.h))
+        };
+      })
+      .filter(Boolean);
+    if (!lines.length) return null;
+
+    const top = ocr.height ? 0 : Math.min(...lines.map((l) => l.top));
+    const bottom = ocr.height || Math.max(...lines.map((l) => l.bottom));
+    const zone = (bottom - top) * EDGE_ZONE;
+    const byTop = [...lines].sort((a, b) => a.top - b.top);
+    const last = byTop[byTop.length - 1];
+    const aboveLast = byTop[byTop.length - 2];
+    const lineHeight = byTop.reduce((sum, l) => sum + (l.bottom - l.top), 0) / byTop.length;
+    // The bottom-most text line counts as a footer when it stands apart from the text above.
+    const lastSetApart = !aboveLast || last.top - aboveLast.bottom >= lineHeight * 1.5;
+
+    const nearBottom = byTop.filter((l) => l.bottom >= bottom - zone).reverse();
+    const nearTop = byTop.filter((l) => l.top <= top + zone && !nearBottom.includes(l));
+    const candidates = [...nearBottom, ...nearTop];
+    if (!candidates.includes(last)) candidates.unshift(last);
+
     for (const line of candidates) {
-      const text = lineText(line);
-      let m = /\bpage\s+(\d{1,5})\b/i.exec(text);
+      if (line.count > MAX_FOOTER_WORDS) continue;
+      let m = /\bpage\s+(\d{1,5})\b/i.exec(line.text);
       if (m) return { label: `Page ${Number(m[1])}`, number: Number(m[1]) };
-      m = /\bloc(?:ation)?\.?\s+(\d{1,6})\b/i.exec(text);
+      m = /\bloc(?:ation)?\.?\s+(\d{1,6})\b/i.exec(line.text);
       if (m) return { label: `Location ${Number(m[1])}`, number: null };
-      m = /^(\d{1,4})$/.exec(text);
-      if (m) return { label: String(Number(m[1])), number: Number(m[1]) };
+      m = /^(\d{1,4})$/.exec(line.text);
+      const inZone = nearBottom.includes(line) || nearTop.includes(line);
+      if (m && (inZone || (line === last && lastSetApart))) return { label: String(Number(m[1])), number: Number(m[1]) };
     }
     return null;
   }
