@@ -1,0 +1,17 @@
+{
+  "name": "dogear",
+  "version": "0.1.0",
+  "description": "Dogear - a reading companion that captures book pages, highlights and notes",
+  "main": "src/main/main.js",
+  "private": true,
+  "scripts": {
+    "start": "electron .",
+    "dev": "electron . --dev",
+    "test": "node --test \"test/**/*.test.js\""
+  },
+  "author": "kedar",
+  "license": "UNLICENSED",
+  "devDependencies": {
+    "electron": "^33.2.0"
+  }
+}
