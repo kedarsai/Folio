@@ -1,7 +1,7 @@
 {
-  "name": "dogear",
+  "name": "folio",
   "version": "0.1.0",
-  "description": "Dogear - a reading companion that captures book pages, highlights and notes",
+  "description": "Folio - a reading companion that captures book pages, highlights and notes",
   "main": "src/main/main.js",
   "private": true,
   "scripts": {

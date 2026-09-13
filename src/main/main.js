@@ -2,10 +2,10 @@
 const path = require('path');
 const { app, BrowserWindow, dialog, globalShortcut, ipcMain, screen, shell } = require('electron');
 
-// Settings live in %APPDATA%\Dogear regardless of the package name's casing.
-app.setName('Dogear');
-app.setPath('userData', process.env.DOGEAR_USERDATA || path.join(app.getPath('appData'), 'Dogear'));
-if (process.platform === 'win32') app.setAppUserModelId('com.kedar.dogear');
+// Settings live in %APPDATA%\Folio regardless of the package name's casing.
+app.setName('Folio');
+app.setPath('userData', process.env.FOLIO_USERDATA || path.join(app.getPath('appData'), 'Folio'));
+if (process.platform === 'win32') app.setAppUserModelId('com.kedar.folio');
 
 const { Settings } = require('./settings');
 const { Library } = require('./library');
@@ -61,7 +61,7 @@ function createWindow() {
     frame: false,
     show: false,
     backgroundColor: '#fdf4e3',
-    title: 'Dogear',
+    title: 'Folio',
     icon: path.join(__dirname, '..', '..', 'assets', 'icon.png'),
     webPreferences: { preload: PRELOAD, contextIsolation: true, nodeIntegration: false }
   });
@@ -236,7 +236,7 @@ function wireIpc() {
 
   handle('settings:chooseLibrary', async () => {
     const res = await dialog.showOpenDialog(win, {
-      title: 'Choose where Dogear keeps your books',
+      title: 'Choose where Folio keeps your books',
       defaultPath: settings.get().libraryRoot,
       properties: ['openDirectory', 'createDirectory']
     });
@@ -430,17 +430,17 @@ if (!app.requestSingleInstanceLock()) {
 
   app.whenReady().then(() => {
     settings = new Settings(app.getPath('userData'), {
-      libraryRoot: process.env.DOGEAR_LIBRARY || path.join(app.getPath('documents'), 'Dogear')
+      libraryRoot: process.env.FOLIO_LIBRARY || path.join(app.getPath('documents'), 'Folio')
     });
     library = new Library(settings.get().libraryRoot);
     wireIpc();
     createWindow();
     registerHotkey(settings.get().hotkey);
 
-    // Automated smoke runs: DOGEAR_SMOKE points at a module that drives the window.
-    if (process.env.DOGEAR_SMOKE) {
+    // Automated smoke runs: FOLIO_SMOKE points at a module that drives the window.
+    if (process.env.FOLIO_SMOKE) {
       win.webContents.once('did-finish-load', () => {
-        require(process.env.DOGEAR_SMOKE)({ app, win, getLibrary: () => library })
+        require(process.env.FOLIO_SMOKE)({ app, win, getLibrary: () => library })
           .catch((err) => { console.error('[smoke]', err); process.exitCode = 1; })
           .finally(() => app.quit());
       });

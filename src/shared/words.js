@@ -1,10 +1,10 @@
 /* OCR word geometry: flattening, hit-testing, highlight ranges, page labels.
    Pure functions, loaded by Node (require) and by the renderer (<script>,
-   exposed as window.DogearWords). All coordinates are image pixels. */
+   exposed as window.FolioWords). All coordinates are image pixels. */
 (function (root, factory) {
   const api = factory();
   if (typeof module === 'object' && module.exports) module.exports = api;
-  else root.DogearWords = api;
+  else root.FolioWords = api;
 })(typeof self !== 'undefined' ? self : this, function () {
   'use strict';
 

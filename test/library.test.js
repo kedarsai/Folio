@@ -11,7 +11,7 @@ const { Settings } = require('../src/main/settings');
 const PNG = Buffer.from('89504e470d0a1a0a', 'hex');
 
 function tmp() {
-  return fs.mkdtempSync(path.join(os.tmpdir(), 'dogear-test-'));
+  return fs.mkdtempSync(path.join(os.tmpdir(), 'folio-test-'));
 }
 
 function ls(dir) {

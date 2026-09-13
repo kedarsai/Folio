@@ -10,7 +10,7 @@ const { runOcr, OcrQueue } = require('../src/main/ocr');
 const isWindows = process.platform === 'win32';
 
 test('runOcr reads words with boxes from a page image', { skip: !isWindows, timeout: 60000 }, async () => {
-  const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'dogear-ocr-'));
+  const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'folio-ocr-'));
   const png = path.join(dir, 'page.png');
   execFileSync('powershell.exe', ['-NoProfile', '-ExecutionPolicy', 'Bypass', '-File',
     path.join(__dirname, 'fixtures', 'make-page.ps1'), '-Out', png]);
@@ -26,7 +26,7 @@ test('runOcr reads words with boxes from a page image', { skip: !isWindows, time
 });
 
 test('runOcr rejects for a missing file', { skip: !isWindows, timeout: 60000 }, async () => {
-  await assert.rejects(runOcr(path.join(os.tmpdir(), 'does-not-exist-dogear.png')));
+  await assert.rejects(runOcr(path.join(os.tmpdir(), 'does-not-exist-folio.png')));
 });
 
 test('OcrQueue runs jobs one at a time, in order, and survives failures', async () => {

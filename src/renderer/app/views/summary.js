@@ -4,7 +4,7 @@
 (function () {
   const { h, icon, mascot } = window.D;
   const UI = window.UI;
-  const api = window.dogear;
+  const api = window.folio;
 
   window.Views = window.Views || {};
 

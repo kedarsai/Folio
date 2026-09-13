@@ -12,7 +12,7 @@ function on(channel, callback) {
 
 const EVENTS = ['toast', 'book:changed', 'capture:done', 'capture:needRegion', 'win:state'];
 
-contextBridge.exposeInMainWorld('dogear', {
+contextBridge.exposeInMainWorld('folio', {
   info: call('app:info'),
   updateSettings: call('settings:update'),
   setHotkey: call('settings:setHotkey'),

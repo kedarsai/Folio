@@ -1,53 +1,70 @@
-# Draws the Dogear mascot (a page with a folded orange corner and a face)
-# into assets\icon.png (256px) and assets\icon.ico. Run once; outputs are committed.
+# Draws the Folio icon (an open book with an orange bookmark ribbon, in the
+# ink-outline style) into assets\icon.png (256px) and assets\icon.ico.
+# Run once; outputs are committed.
 Add-Type -AssemblyName System.Drawing
 $root = Split-Path -Parent $PSScriptRoot
 $assets = Join-Path $root 'assets'
 New-Item -ItemType Directory -Force $assets | Out-Null
 
-function Draw-Mascot([int]$size) {
+function Draw-Book([int]$size) {
   $bmp = New-Object System.Drawing.Bitmap $size, $size
   $g = [System.Drawing.Graphics]::FromImage($bmp)
   $g.SmoothingMode = 'AntiAlias'
   $g.Clear([System.Drawing.Color]::Transparent)
-  $s = $size / 36.0
+  $s = $size / 24.0
   $ink = [System.Drawing.ColorTranslator]::FromHtml('#3a261c')
   $paper = [System.Drawing.ColorTranslator]::FromHtml('#fffaf2')
   $orange = [System.Drawing.ColorTranslator]::FromHtml('#f48f2d')
-  $blush = [System.Drawing.ColorTranslator]::FromHtml('#ffb35c')
-  $pen = New-Object System.Drawing.Pen $ink, ([float](2.6 * $s))
-  $pen.LineJoin = 'Round'
+  $shade = [System.Drawing.ColorTranslator]::FromHtml('#f6e9d2')
+  $width = [float]([math]::Max(1.2, 1.9 * $s))
+  $pen = New-Object System.Drawing.Pen $ink, $width
+  $pen.LineJoin = 'Round'; $pen.StartCap = 'Round'; $pen.EndCap = 'Round'
   $P = { param($x, $y) New-Object System.Drawing.PointF ([float]($x * $s)), ([float]($y * $s)) }
 
-  $page = [System.Drawing.PointF[]]@((& $P 5 2), (& $P 23 2), (& $P 32 11), (& $P 32 34), (& $P 5 34))
-  $g.FillPolygon((New-Object System.Drawing.SolidBrush $paper), $page)
-  $g.DrawPolygon($pen, $page)
-  $ear = [System.Drawing.PointF[]]@((& $P 23 2), (& $P 23 11), (& $P 32 11))
-  $g.FillPolygon((New-Object System.Drawing.SolidBrush $orange), $ear)
-  $g.DrawPolygon($pen, $ear)
+  # Same curves as the dock icon: two pages bowing from a centre spine.
+  $book = New-Object System.Drawing.Drawing2D.GraphicsPath
+  $book.AddBezier((& $P 12 6.4), (& $P 9.8 4.8), (& $P 6.6 4.4), (& $P 2.4 5))
+  $book.AddLine((& $P 2.4 5), (& $P 2.4 18.6))
+  $book.AddBezier((& $P 2.4 18.6), (& $P 6.6 18), (& $P 9.8 18.4), (& $P 12 20))
+  $book.AddBezier((& $P 12 20), (& $P 14.2 18.4), (& $P 17.4 18), (& $P 21.6 18.6))
+  $book.AddLine((& $P 21.6 18.6), (& $P 21.6 5))
+  $book.AddBezier((& $P 21.6 5), (& $P 17.4 4.4), (& $P 14.2 4.8), (& $P 12 6.4))
+  $book.CloseFigure()
+  $g.FillPath((New-Object System.Drawing.SolidBrush $paper), $book)
 
-  $inkBrush = New-Object System.Drawing.SolidBrush $ink
-  $r = 2.1 * $s
-  $g.FillEllipse($inkBrush, [float](13 * $s - $r), [float](18 * $s - $r), [float](2 * $r), [float](2 * $r))
-  $g.FillEllipse($inkBrush, [float](24 * $s - $r), [float](18 * $s - $r), [float](2 * $r), [float](2 * $r))
-  $b = 1.8 * $s
-  $blushBrush = New-Object System.Drawing.SolidBrush ([System.Drawing.Color]::FromArgb(180, $blush))
-  $g.FillEllipse($blushBrush, [float](10 * $s - $b), [float](23 * $s - $b), [float](2 * $b), [float](2 * $b))
-  $g.FillEllipse($blushBrush, [float](27 * $s - $b), [float](23 * $s - $b), [float](2 * $b), [float](2 * $b))
-  $mouth = New-Object System.Drawing.Pen $ink, ([float](2.2 * $s))
-  $mouth.StartCap = 'Round'; $mouth.EndCap = 'Round'
-  $g.DrawArc($mouth, [float](14.5 * $s), [float](21 * $s), [float](8 * $s), [float](6 * $s), 20, 140)
+  # a soft shade on the left page, so it reads as an open book even tiny
+  $left = New-Object System.Drawing.Drawing2D.GraphicsPath
+  $left.AddBezier((& $P 12 6.4), (& $P 9.8 4.8), (& $P 6.6 4.4), (& $P 2.4 5))
+  $left.AddLine((& $P 2.4 5), (& $P 2.4 18.6))
+  $left.AddBezier((& $P 2.4 18.6), (& $P 6.6 18), (& $P 9.8 18.4), (& $P 12 20))
+  $left.CloseFigure()
+  $g.FillPath((New-Object System.Drawing.SolidBrush $shade), $left)
+
+  if ($size -ge 48) {
+    $lines = New-Object System.Drawing.Pen ([System.Drawing.Color]::FromArgb(150, $ink)), ([float]([math]::Max(1, 1.1 * $s)))
+    $lines.StartCap = 'Round'; $lines.EndCap = 'Round'
+    foreach ($y in 9.4, 12.2, 15) {
+      $g.DrawBezier($lines, (& $P 5 $y), (& $P 6.6 ($y - .3)), (& $P 8.2 ($y - .1)), (& $P 9.6 ($y + .4)))
+    }
+  }
+
+  $g.DrawPath($pen, $book)
+  $g.DrawLine($pen, (& $P 12 6.4), (& $P 12 20))
+
+  $ribbon = [System.Drawing.PointF[]]@((& $P 15.2 5.1), (& $P 15.2 11.8), (& $P 16.9 10.4), (& $P 18.6 11.8), (& $P 18.6 4.8))
+  $g.FillPolygon((New-Object System.Drawing.SolidBrush $orange), $ribbon)
+  $g.DrawLines($pen, $ribbon)
   $g.Dispose()
   return $bmp
 }
 
-$big = Draw-Mascot 256
+$big = Draw-Book 256
 $big.Save((Join-Path $assets 'icon.png'), [System.Drawing.Imaging.ImageFormat]::Png)
 
 # A PNG-compressed .ico with 16..256 px frames.
 $sizes = 16, 24, 32, 48, 64, 128, 256
 $frames = foreach ($sz in $sizes) {
-  $bmp = Draw-Mascot $sz
+  $bmp = Draw-Book $sz
   $ms = New-Object System.IO.MemoryStream
   $bmp.Save($ms, [System.Drawing.Imaging.ImageFormat]::Png)
   $bmp.Dispose()

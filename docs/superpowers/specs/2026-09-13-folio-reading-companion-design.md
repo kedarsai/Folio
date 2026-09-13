@@ -1,11 +1,11 @@
-# Dogear — reading companion — design
+# Folio — reading companion — design
 
 Date: 2026-09-13 · Status: approved for implementation
 
 ## Purpose
 
 You read a book in Kindle for PC or a PDF reader on the left half of the screen.
-Dogear sits on the right half. One click (or a global hotkey) captures the page
+Folio sits on the right half. One click (or a global hotkey) captures the page
 you are on. Later — or right away — you step through the captured pages, drag a
 highlighter over lines on the screenshot to pull out the exact text, and add your
 own thoughts. Everything rolls up into a per-book Summary with a Source link back
@@ -30,10 +30,10 @@ Single user, Windows 11 only.
 
 ## On-disk layout
 
-Library root defaults to `Documents\Dogear` (changeable in Settings).
+Library root defaults to `Documents\Folio` (changeable in Settings).
 
 ```
-Documents\Dogear\
+Documents\Folio\
   Atomic Habits\                      <- book folder (name = sanitized title)
     book.json                         <- title, kind, pdfPath, capture region, timestamps
     Summary.md                        <- regenerated after every change; readable by humans / Claude
@@ -47,7 +47,7 @@ Documents\Dogear\
       001.json
 ```
 
-App settings (not book data) live in `%APPDATA%\Dogear\settings.json`:
+App settings (not book data) live in `%APPDATA%\Folio\settings.json`:
 `libraryRoot`, `windowBounds`, `hotkey` (default `Control+Alt+B`), `layout`
 (`stack` = image over notes, `side` = image beside notes), `alwaysOnTop`, `lastBook`.
 
@@ -115,7 +115,7 @@ src/
     exporter.js      Markdown export (md + images folder), PDF export (printToPDF)
     pdf.js           open a PDF at a page (Edge, fallback shell.openPath)
   preload/
-    preload.js       window.dogear API
+    preload.js       window.folio API
   shared/
     words.js         flatten words, index<->rect, range text, label detection (pure; used by main + renderer)
     names.js         sanitize folder names, NN/NNN prefixes, parse "NN Title"

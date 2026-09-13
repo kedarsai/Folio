@@ -47,7 +47,7 @@ async function exportPdf(library, bookId, targetFile) {
     }
   });
 
-  const tmp = path.join(os.tmpdir(), `dogear-summary-${Date.now()}.html`);
+  const tmp = path.join(os.tmpdir(), `folio-summary-${Date.now()}.html`);
   fs.writeFileSync(tmp, html, 'utf8');
   const win = new BrowserWindow({ show: false, webPreferences: { offscreen: false, javascript: false } });
   try {

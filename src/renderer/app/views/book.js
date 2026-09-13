@@ -4,9 +4,9 @@
 
 (function () {
   const { h, clear, icon, mascot, debounce, uid } = window.D;
-  const W = window.DogearWords;
+  const W = window.FolioWords;
   const UI = window.UI;
-  const api = window.dogear;
+  const api = window.folio;
 
   window.Views = window.Views || {};
 

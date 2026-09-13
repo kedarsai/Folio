@@ -4,7 +4,7 @@ const path = require('path');
 const { readJson, writeJsonAtomic, preserveCorrupt } = require('./jsonfile');
 
 const DEFAULTS = {
-  libraryRoot: null,        // filled in by main (Documents\Dogear)
+  libraryRoot: null,        // filled in by main (Documents\Folio)
   hotkey: 'Control+Alt+B',
   layout: 'stack',          // 'stack' = image over notes, 'side' = image beside notes
   alwaysOnTop: false,

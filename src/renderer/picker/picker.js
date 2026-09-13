@@ -9,7 +9,7 @@ const body = document.body;
 let start = null;
 let sent = false;
 
-window.dogear.onPickerImage(({ url }) => { frozen.src = url; });
+window.folio.onPickerImage(({ url }) => { frozen.src = url; });
 
 function rectFrom(a, b) {
   return {
@@ -37,7 +37,7 @@ function draw(r) {
 function finish(rect) {
   if (sent) return;
   sent = true;
-  window.dogear.pickerPicked(rect);
+  window.folio.pickerPicked(rect);
 }
 
 window.addEventListener('mousedown', (e) => {

@@ -4,7 +4,7 @@
 
 (function () {
   const { h, clear, icon, mascot, errText } = window.D;
-  const api = window.dogear;
+  const api = window.folio;
 
   const view = document.getElementById('view');
   const brand = document.getElementById('brand');
@@ -55,13 +55,13 @@
   function buildTitlebar() {
     brand.append(
       h('div.tb__mascot', mascot(24)),
-      h('div.tb__names', h('strong', 'DOGEAR'), h('span.stamp', 'Reading companion'))
+      h('div.tb__names', h('strong', 'FOLIO'), h('span.stamp', 'Reading companion'))
     );
 
     const pinBtn = h('button.tb__btn', { title: 'Keep on top', onclick: async () => {
       const on = await api.win.pin();
       pinBtn.classList.toggle('is-on', on);
-      window.UI.toast(on ? 'Dogear stays on top' : 'Dogear no longer stays on top');
+      window.UI.toast(on ? 'Folio stays on top' : 'Folio no longer stays on top');
     } }, icon('pin'));
     pinBtn.classList.toggle('is-on', !!app.info.alwaysOnTop);
 

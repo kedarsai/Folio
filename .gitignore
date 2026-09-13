@@ -1,4 +1,15 @@
-﻿node_modules/
+# dependencies and builds
+node_modules/
 dist/
 *.log
 
+# Personal data never belongs in this repo. Folio keeps it outside the project
+# (Documents\Folio and %APPDATA%\Folio); these rules catch anything copied in by mistake.
+settings.json
+book.json
+Summary.md
+*.corrupt-*
+*.tmp
+/library/
+/Folio/
+.env

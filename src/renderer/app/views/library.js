@@ -4,7 +4,7 @@
 (function () {
   const { h, clear, icon, mascot, timeAgo } = window.D;
   const UI = window.UI;
-  const api = window.dogear;
+  const api = window.folio;
 
   window.Views = window.Views || {};
 
@@ -102,7 +102,7 @@
               h('div.region-intro__us', mascot(20)))),
           h('ol.region-intro__steps',
             h('li', 'Open your book in Kindle or the PDF reader.'),
-            h('li', 'Put it on the left, Dogear on the right.'),
+            h('li', 'Put it on the left, Folio on the right.'),
             h('li', 'Drag a box around just the page text.'))),
         h('div.modal__foot',
           h('button.btn.btn--ghost', { onclick: () => close(false) }, 'Later'),
@@ -115,7 +115,7 @@
       return false;
     }
     if (res.overlapsUs) {
-      UI.toast('Heads up: the area overlaps Dogear\'s window. Move Dogear aside before capturing.', 'error');
+      UI.toast('Heads up: the area overlaps Folio\'s window. Move Folio aside before capturing.', 'error');
     } else {
       UI.toast(`Capture area saved (${res.region.width} × ${res.region.height})`, 'success');
     }
@@ -251,7 +251,7 @@
           grid.append(h('div.empty.card.shelf__empty',
             mascot(64, 'wow'),
             h('h2', 'Your shelf is empty'),
-            h('p', 'Open a book in Kindle or your PDF reader, snap Dogear to the right half of the screen, and start a new book here.'),
+            h('p', 'Open a book in Kindle or your PDF reader, snap Folio to the right half of the screen, and start a new book here.'),
             h('div.row',
               h('button.btn', { onclick: () => api.win.snapRight() }, icon('snap'), 'Snap right'),
               h('button.btn.btn--primary', { onclick: () => newBookDialog(app) }, icon('plus'), 'New book'))));
