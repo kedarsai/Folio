@@ -16,7 +16,9 @@ npm install
 npm start
 ```
 
-For Start Menu and Desktop shortcuts, run this once:
+For Start Menu and Desktop shortcuts, run this once. The Start Menu shortcut
+is also what [Tick](https://github.com/kedarsai/Tick)'s dock opens, so Folio
+can live in any folder:
 
 ```powershell
 powershell -ExecutionPolicy Bypass -File scripts\install-shortcuts.ps1
